@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>链家二手房</title>
+    <meta name="referrer" content="no-referrer"/>
+</head>
+<body>
+
+<form id="sql_form">
+    <div class="card p-4">
+        <div class="card-body py-5">
+            <div class="form-group">
+                <textarea name="sql" class="form-control" cols="130" rows="20"></textarea>
+                <input id="sendBtn" type="button" class="btn btn-primary px-5" value="查找"/>
+            </div>
+        </div>
+    </div>
+
+    <div id="result">
+
+    </div>
+</form>
+
+
+<script src="./js/jquery-1.8.2.min.js"></script>
+<script src="./js/common.js"></script>
+
+<script>
+
+    $(function () {
+        bindEvent();
+    });
+
+    function bindEvent() {
+        $("#sendBtn").bind("click", send);
+    }
+
+    function sendPreference(id, preference) {
+        util.ajax({
+            url: "sendPreference",
+            type: "post",
+            data: "preference=" + preference + "&id=" + id,
+            success: function (data) {
+                console.log(JSON.stringify(data));
+            }
+        });
+    }
+
+    function send() {
+        util.ajax({
+            url: "getBySql",
+            type: "post",
+            data: $("#sql_form").serialize(),
+            success: function (data) {
+
+                console.log(JSON.stringify(data));
+                data = data.data;
+
+                let all = "";
+                for (let i = 0; i < data.length; i++) {
+
+                    let item = data[i];
+
+                    // 图片
+                    let imageDiv = '<div style="width: 10000px;">';
+                    let IMAGE = item.IMAGE;
+                    if (typeof IMAGE != 'undefined' && IMAGE != null && IMAGE !== '') {
+                        let arr = IMAGE.split("|");
+                        for (let j = 0; j < arr.length; j++) {
+                            let img = arr[j];
+                            imageDiv += '<img src="' + img + '" alt="" style="width: 710px;height: 400px;margin: 2px;">'
+
+                        }
+                    } else {
+                        imageDiv += "<p style='font-size: xx-large'>无图</p>"
+                    }
+                    imageDiv += "</div>";
+
+                    // 文本
+                    let textDiv = '<div style="width: auto;">';
+                    textDiv += '<div style="width: 300px;display: inline-block">TITLE</div> ' + item.TITLE + '<br/>';
+                    textDiv += '<div style="width: 300px;display: inline-block">TOTAL_PRICE</div> ' + item.TOTAL_PRICE + '<br/>';
+                    textDiv += "<div style='width: 300px;display: inline-block'>DETAIL_URL</div> <a target='_blank' href='" + item.DETAIL_URL + "'>房屋详细信息</a><br/>";
+                    textDiv += "<div style='width: 300px;display: inline-block'>XIAO_QU_URL</div> <a target='_blank' href='" + item.XIAO_QU_URL + "'>小区详细信息</a><br/>";
+                    textDiv += '<div style="width: 300px;display: inline-block">XIAO_QU_NAME</div> ' + item.XIAO_QU_NAME + '<br/>';
+                    textDiv += '<div style="width: 300px;display: inline-block">SMALL_REGION</div> ' + item.SMALL_REGION + '<br/>';
+                    textDiv += '<div style="width: 300px;display: inline-block">HOUSE_INFO</div> ' + item.HOUSE_INFO + '<br/>';
+                    textDiv += '<div style="width: 300px;display: inline-block">TO_LEX_MINUTES</div> ' + item.TO_LEX_MINUTES + '分钟<br/>';
+                    textDiv += '<div style="width: 300px;display: inline-block">TO_CECI_MINUTES</div> ' + item.TO_CECI_MINUTES + '分钟<br/>';
+                    //textDiv += '<div style="width: 300px;display: inline-block">REMARK</div> ' + item.REMARK + '<br/>';
+
+                    textDiv += '<button type="button" style="width: 100px;height: 40px;" onclick="sendPreference('+item.ID+', \'喜欢\')">喜欢</button>&nbsp;&nbsp;&nbsp;' +
+                        '<button type="button" style="width: 100px;height: 40px;" onclick="sendPreference('+item.ID+', \'不喜欢\')">不喜欢</button>&nbsp;&nbsp;&nbsp;' +
+                        '<button type="button" style="width: 100px;height: 40px;" onclick="sendPreference('+item.ID+', \'\')">清除喜好</button>&nbsp;&nbsp;&nbsp;'
+                    ;
+
+                    textDiv += "</div>";
+
+
+                    all += "<div style='margin: 10px'>" + imageDiv + textDiv + "<hr/></div>";
+                }
+                $("#result").html("").append(all);
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

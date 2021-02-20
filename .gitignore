@@ -1,0 +1,12 @@
+.project
+.settings
+.classpath
+.factorypath
+
+.idea/
+*.iml
+target/
+tfs-dao/src/main/resources/mybatis-mappers/
+tfs-dao/src/main/java/com/tyty/tfs/dao/entity
+tfs-dao/src/main/java/com/tyty/tfs/dao/mapper
+
