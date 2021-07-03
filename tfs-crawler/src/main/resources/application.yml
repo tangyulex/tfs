@@ -1,8 +1,12 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/tfsdb?useUnicode=true&serverTimezone=Asia/Shanghai&characterEncoding=utf-8&autoReconnect=true
-    username: root
-    password: tangyu
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/tfsdb?useUnicode=true&serverTimezone=Asia/Shanghai&characterEncoding=utf-8&autoReconnect=true
+      username: root
+      password: tangyu
+      initial-size: 10
+      max-active: 50
+      max-wait-thread-count: 1000
 mybatis:
   mapper-locations: classpath:/mybatis-mappers/*.xml
