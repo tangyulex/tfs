@@ -3,7 +3,7 @@
 .classpath
 .factorypath
 
-tfs-temp/
+tfs-temp*/
 .idea/
 *.iml
 target/
